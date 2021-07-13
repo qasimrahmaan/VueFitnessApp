@@ -12,15 +12,18 @@
                 </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="email">Email Address</label>
-                    <input @input="onInputEmail" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="email" type="email" placeholder="Your email address">
+                    <input v-model="email" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="email" type="email" placeholder="Your email address">
+                    <span v-if="msg.email" style="color:red">{{msg.email}}</span>  
                 </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="password">Password</label>
-                    <input @input="onInputPassword" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="password" type="password" placeholder="Your secure password">
+                    <input v-model="password" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="password" type="password" placeholder="Your secure password">
+                    <span v-if="msg.password" style="color:red">{{msg.password}}</span>  
                 </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="Phone Number">Phone Number</label>
-                    <input @input="onInputPhoneNumber" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="password" type="Phone Number" placeholder="Your secure password">
+                    <input v-model="phone" class="appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="password" type="Phone Number" placeholder="Your secure password">
+                    <span v-if="msg.phone" style="color:red">{{msg.phone}}</span>  
                 </div>
                 <div class="mb-4">
                     <label class="block text-grey-darker text-sm font-bold mb-2" for="Address">Address</label>
@@ -61,20 +64,55 @@ export default {
       password: '',
       phone: '',
       address: '',
+      msg: []
     }
+  },
+  watch: {
+    email(value){
+      // binding this to the data value in the email input
+      this.email = value;
+      this.validateEmail(value);
+    },
+    password(value){
+      this.password = value;
+      this.validatePassword(value);
+    },
+    phone(value){
+      this.phone = value;
+      this.validatePhone(value);
+    },
   },
   methods: {
     onInputName(event){
       this.name = event.target.value;
     },
-    onInputEmail(event){
-      this.email = event.target.value;
+    validateEmail(value){
+      // eslint-no-useless-escape
+      const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      let bool = pattern.test(value);
+      if(bool){
+        this.msg['email'] = '';
+      } else{
+        this.msg['email'] = 'Invalid Email Address';
+      } 
     },
-    onInputPassword(event){
-      this.password = event.target.value;
+    validatePassword(value){
+      let difference = 8 - value.length;
+      if(value.length<8){
+        this.msg['password'] = 'Must be 8 characters! '+ difference + ' characters left' ;
+      } else {
+         this.msg['password'] = '';
+      }
     },
-    onInputPhoneNumber(event){
-      this.phone = event.target.value;
+    validatePhone(value){
+      // eslint-no-useless-escape
+      const pattern = /^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$/;
+      let bool = pattern.test(value);
+      if(bool){
+        this.msg['phone'] = '';
+      } else{
+        this.msg['phone'] = 'Invalid Phone Number';
+      } 
     },
     onInputAddress(event){
       this.address = event.target.value;

@@ -4,6 +4,10 @@ export const routes = [
 	{
 		path: "/",
 		name: "Main",
+		props: true,
+		meta: {
+			auth: true,
+		},
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../views/Main.vue"),
 	},
@@ -16,6 +20,7 @@ export const routes = [
 	{
 		path: "/Login",
 		name: "Login",
+		props: true,
 		component: () =>
 			import(/* webpackChunkName: "about" */ "../views/Login.vue"),
 	},
